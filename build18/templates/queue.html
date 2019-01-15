@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CMU Postal Services</title>
+</head>
+<body>
+<h1>Mailroom Queue</h1>
+<form action="/submitted">
+  {% for item in data %}
+     {{ item }} <input type="text" name="{{ item }}"><br><br><br>
+  {% endfor %}
+  <input type="submit" value="Submit">
+  <input type="reset">
+</form>
+</body>
+</html>
