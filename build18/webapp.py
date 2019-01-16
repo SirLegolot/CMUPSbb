@@ -18,24 +18,20 @@ def root():
  
 @app.route('/submitted')
 def poll():
-    andrew = request.args.get("andrewID: ")
-    smc = request.args.get("SMC: ")
-    lastname = request.args.get("Last name: ")
-
-    conn = connect("data.db")
-    c = conn.cursor()
-    c.execute("""SELECT bin FROM packages WHERE andrew = ? WHERE smc = ? WHERE lastname = ?""",(andrew,smc,lastname,))
-    result = c.fetchone()
-    if len(result)>0:
-    	pass
-
-
-    out = open(filename, 'a')
-    out.write(smc+" "+firstname+" "+lastname+"\n")
-    out.close()
-
-
-    return "Thanks! You are now in the queue."
+	andrew = request.args.get("andrewID: ")
+	smc = request.args.get("SMC: ")
+	lastname = request.args.get("Last name: ")
+	conn = connect("data.db")
+	c = conn.cursor()
+	c.execute("""SELECT bin FROM packages WHERE andrew = ? AND smc = ? AND lastname = ?""",(andrew,smc,lastname,))
+	result = c.fetchone()
+	if result!=None:
+		out = open(filename, 'a')
+		out.write(smc+" "+firstname+" "+lastname+"\n")
+		out.close()
+		return "Thanks! You are now in the queue. You have "+str(len(result))+"packages."
+	else:
+		return "You don't have any packages in the mailroom."
 
 
 
