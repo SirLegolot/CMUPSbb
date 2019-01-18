@@ -3,25 +3,43 @@ import sqlite3
 from sqlite3 import Error
 import string
 
+class queueEntry:
+	smc = 0
+	bin = 0
+	barcode = 0
+	def __init__(self, smc, bin, barcode):
+		self.smc = smc
+		self.bin = bin
+		self.barcode = barcode
+	def get_smc(self):
+		return self.smc
+	def get_bin(self):
+		return self.bin
+	def get_barcode(self):
+		return self.barcode
+
 def connect(database):
 	conn = sqlite3.connect(database)
 	return conn
 
-
 def run():
 	global currBin
 	global status
-	
-	queue = [1234, 1256, 9023]
-	
+		
 	conn = connect("data.db")
 	c = conn.cursor()
-	c.execute("""SELECT * FROM packages WHERE smc='Available'""")
 	
-	result = c.fetchall()
+	queue = get_queue()
 	
+	def get_queue():
+		queue = []
+		for row in c.execute("""SELECT * FROM queue"""):
+			k = queueEntry(row[0], row[1], row[2])
+			queue.append(k)
+			print(k.get_smc())
+		return queue
 	
-	
+	#result = c.fetchall()
 	queueScreen = Tk()
 	queueScreen.title("Pickup Queue")
 	queueScreen.geometry("700x500")
@@ -48,8 +66,11 @@ def run():
 	def updateList():
 		listbox.delete(0, END)
 		for item in queue:
-			listbox.insert(END, item)
+			listbox.insert(END, item.get_smc())
 	def done():
+		k = queue[listbox.curselection()[0]].get_barcode()
+		c.execute("""DELETE FROM queue WHERE barcode = ?""", (k,))
+		conn.commit()
 		del queue[listbox.curselection()[0]]
 		listbox.delete(listbox.curselection()[0])
 	
