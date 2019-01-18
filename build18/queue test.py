@@ -31,7 +31,6 @@ def receive():
 			c.execute("""SELECT * FROM packages WHERE smc = ?""",(smc,))
 			result = c.fetchall()
 			numPacks = len(result)
-			print(numPacks)
 			if numPacks!=0:
 				for item in result:
 					newSMC = item[0]
