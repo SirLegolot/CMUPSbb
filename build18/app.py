@@ -37,12 +37,18 @@ def init():
 										firstname text NOT NULL,
 										andrew text NOT NULL
 										);"""
+	create_Queue_Table = """CREATE TABLE IF NOT EXISTS queue(
+										smc integer NOT NULL,
+										bin integer NOT NULL,
+										barcode integer NOT NULL,
+										);"""
 	setup_Bins = """INSERT OR IGNORE INTO bins(num, status) VALUES(?, "Available");"""
 	conn = connect("data.db")
 	if conn is not None:
 		createTable(conn, create_Bin_Table)
 		createTable(conn, create_Packages_Table)
 		createTable(conn, create_People_Table)
+		createTable(conn, create_Queue_Table)
 		setupBins(conn, setup_Bins, 10)
 	else:
 		print("Error! cannot create the database connection.")
